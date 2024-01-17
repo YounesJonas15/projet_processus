@@ -16,14 +16,14 @@ class Demande(BaseModel):
     email: str
     description: str
 
-async def verificationDemande(demande:Demande):
+async def verificationDemande(demande):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     channel.queue_declare(queue='commandList')
     channel.basic_publish(exchange='',
                       routing_key='hello',
-                      body='Hello, RabbitMQ!')
+                      body=demande)
 
     print(" [x] Message envoyé à la file d'attente 'hello'")
 
@@ -48,7 +48,7 @@ async def verificationDemande(demande:Demande):
 async def recevoir_commande(demande: Demande, background_tasks: BackgroundTasks):
     print(demande)
     # Lancer la tâche en arrière-plan
-    background_tasks.add_task(verificationDemande, demande)
+    background_tasks.add_task(verificationDemande, demande.model_dump_json())
     return {"message": "commande reçu et en cours de traitement"}
 
 
