@@ -3,7 +3,7 @@ from fastapi import FastAPI, BackgroundTasks
 from suds.client import Client
 import tkinter as tk
 
-url = "http://127.0.0.1:8000/reception_commande/"
+url = "http://127.0.0.1:8000/effectue_commande/"
 
 app = FastAPI()
 
@@ -13,7 +13,7 @@ def recup_info():
     ville = entry_ville.get()
     email = entry_email.get()
     description = entry_description.get()
-    
+    root.destroy()
 
     data = {
     "nom": nom,
@@ -70,5 +70,7 @@ submit_button = tk.Button(root, text="Soumettre", command=recup_info)
 submit_button.grid(row=9, column=1)
 
 root.mainloop()
+
+
 
 

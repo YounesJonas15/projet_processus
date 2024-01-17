@@ -3,12 +3,20 @@ from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 import json
 import asyncio
-
+import requests
+##8001
 app = FastAPI()
 
 async def verificationDemande():
     await asyncio.sleep(2)
-    print("demande vérifié! ")
+    response = True 
+    if(response):
+        print("demande vérifié! ")
+        response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : response})
+        print(response.json())
+
+
+
 
 class Demande(BaseModel):
     nom: str
