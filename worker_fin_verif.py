@@ -1,6 +1,6 @@
 import pika
+import requests
 import json
-
 # Se connecter à RabbitMQ
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
@@ -13,20 +13,13 @@ def callback(ch, method, properties, body):
     print(f" [x] Message reçu: {body}")
     json_string = body.decode('utf-8')
     result = json.loads(json_string)
-    response = False 
-    result["response"] = response
     print(result)
-    
-    
-    print("demande vérifié! ")
-    channel.basic_publish(exchange='',
-                    routing_key='VerificationResult',
-                    body=json.dumps(result))
-
-
+    response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : result['response']})
+    print(response.json())
+        
 
 # Indiquer à RabbitMQ d'appeler la fonction de rappel lorsque des messages sont reçus
-channel.basic_consume(queue='commandList',
+channel.basic_consume(queue='VerificationResult',
                       on_message_callback=callback,
                       auto_ack=True)
 

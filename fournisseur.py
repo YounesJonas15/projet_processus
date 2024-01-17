@@ -22,7 +22,7 @@ async def verificationDemande(demande):
 
     channel.queue_declare(queue='commandList')
     channel.basic_publish(exchange='',
-                      routing_key='hello',
+                      routing_key='commandList',
                       body=demande)
 
     print(" [x] Message envoyé à la file d'attente 'hello'")
@@ -31,11 +31,11 @@ async def verificationDemande(demande):
     connection.close()
 
     await asyncio.sleep(2)
-    response = True 
+    '''response = True 
     if(response):
         print("demande vérifié! ")
         response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : response})
-        print(response.json())
+        print(response.json())'''
 
 
 

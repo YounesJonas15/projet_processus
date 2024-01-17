@@ -37,7 +37,7 @@ async def effectue_commande(demande: Demande):
 
 @app.post("/verification_commande/")
 async def verification_commande(verification: Verification):
-    if (verification):
+    if (verification.response):
         print("votre commande est valide.")
     else:
         print("votre commande est pas valide.")
