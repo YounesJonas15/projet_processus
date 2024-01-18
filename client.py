@@ -2,6 +2,7 @@ import requests
 from fastapi import FastAPI, BackgroundTasks
 from suds.client import Client
 import tkinter as tk
+import uvicorn
 
 url = "http://127.0.0.1:8000/effectue_commande/"
 
@@ -70,7 +71,6 @@ submit_button = tk.Button(root, text="Soumettre", command=recup_info)
 submit_button.grid(row=9, column=1)
 
 root.mainloop()
-
 
 
 

@@ -1,18 +1,29 @@
 import pika
 import json
-
+import requests
 # Se connecter à RabbitMQ
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
 # Déclarer une file d'attente nommée 'hello'
-channel.queue_declare(queue='VerificationResult')
+channel.queue_declare(queue='commandList')
 
 # Fonction de rappel pour traiter les messages reçus
 def callback(ch, method, properties, body):
     print(f" [x] Message reçu: {body}")
     json_string = body.decode('utf-8')
     result = json.loads(json_string)
+
+    ##Verification par humain
+    ##Stockage base de données 
+
+    url = "http://localhost:3000/update-description"
+    data_web = {
+        "description": result["description"]
+    }
+    response_from_web = requests.post(url, json=data_web)
+    print("Status Code", response_from_web.status_code)
+    print("JSON Response ", response_from_web.json())
     response = False 
     result["response"] = response
     print(result)

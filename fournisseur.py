@@ -6,6 +6,7 @@ import asyncio
 import requests
 import pika 
 import json
+import uvicorn
 ##8001
 app = FastAPI()
 
@@ -16,26 +17,23 @@ class Demande(BaseModel):
     email: str
     description: str
 
+class Verification(BaseModel):
+    response: bool
+
 async def verificationDemande(demande):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='commandList')
     channel.basic_publish(exchange='',
                       routing_key='commandList',
                       body=demande)
 
-    print(" [x] Message envoyé à la file d'attente 'hello'")
+    print(" [x] Message envoyé à la file d'attente 'commandList'")
 
     # Fermer la connexion
     connection.close()
 
-    await asyncio.sleep(2)
-    '''response = True 
-    if(response):
-        print("demande vérifié! ")
-        response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : response})
-        print(response.json())'''
+   
 
 
 
@@ -53,3 +51,14 @@ async def recevoir_commande(demande: Demande, background_tasks: BackgroundTasks)
 
 
 
+@app.post("/verification_commande_fournisseur/")
+async def verification_commande_fournisseur(verification: Verification):
+    
+    response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
+    print(response.json())
+    return("réponse reçu avec succès")
+
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8001)
