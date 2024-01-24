@@ -11,10 +11,10 @@ import uvicorn
 app = FastAPI()
 
 class Demande(BaseModel):
+    email: str
     nom: str
     prenom: str
-    ville: str
-    email: str
+    societe: str
     description: str
 
 class Verification(BaseModel):

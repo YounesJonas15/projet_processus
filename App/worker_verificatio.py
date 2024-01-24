@@ -24,8 +24,9 @@ def callback(ch, method, properties, body):
     response_from_web = requests.post(url, json=data_web)
     print("Status Code", response_from_web.status_code)
     print("JSON Response ", response_from_web.json())
-    response = False 
+    response = response_from_web.json()["message"]
     result["response"] = response
+    result["devis"] = response_from_web.json()["prix"]
     print(result)
     
     

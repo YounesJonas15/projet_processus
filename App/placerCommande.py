@@ -14,10 +14,10 @@ app = FastAPI()
 
 
 class Demande(BaseModel):
+    email: str
     nom: str
     prenom: str
-    ville: str
-    email: str
+    societe: str
     description: str
 
 class Verification(BaseModel):
@@ -30,7 +30,7 @@ async def effectue_commande(demande: Demande):
     demande_json = {
         "nom" : demande.nom,
         "prenom": demande.prenom,
-        "ville": demande.ville,
+        "societe": demande.societe,
         "email": demande.email,
         "description": demande.description
     }
