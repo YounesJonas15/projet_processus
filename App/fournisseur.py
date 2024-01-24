@@ -14,7 +14,6 @@ from schema import  DemandeBase, DemandeCreate
 from models import Demande, Base
 
 #Concernant la Base de donnée 
-
 def create_demande(db: Session, demande: DemandeCreate):
     
     random_id = random.randint(1, 1000)
@@ -46,7 +45,6 @@ Base.metadata.create_all(bind=engine)
 ##8001
 app = FastAPI()
 
-<<<<<<< HEAD
    
 @app.post("/reception_commande/")
 async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTasks):
@@ -56,14 +54,6 @@ async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTa
     background_tasks.add_task(create_demande, next(get_db()), demande)
     return {"message": "commande reçu et en cours de traitement"}
 
-=======
-class Demande(BaseModel):
-    email: str
-    nom: str
-    prenom: str
-    societe: str
-    description: str
->>>>>>> b821c7ee87a463cfd78b5b7e0443e5a7e2c4a6b1
 
 class Verification(BaseModel):
     response: bool

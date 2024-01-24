@@ -11,7 +11,7 @@ app = FastAPI()
 def recup_info():
     nom = entry_nom.get()
     prenom = entry_prenom.get()
-    ville = entry_ville.get()
+    societe = entry_societe.get()
     email = entry_email.get()
     description = entry_description.get()
     root.destroy()
@@ -19,7 +19,7 @@ def recup_info():
     data = {
     "nom": nom,
     "prenom": prenom,
-    "ville": ville,
+    "societe": societe,
     "email": email,
     "description": description
 
@@ -51,10 +51,10 @@ label_prenom.grid(row=1, column=0)
 entry_prenom = tk.Entry(root)
 entry_prenom.grid(row=1, column=1)
 
-label_ville = tk.Label(root, text="Ville : ")
-label_ville.grid(row=2, column=0)
-entry_ville = tk.Entry(root)
-entry_ville.grid(row=2, column=1)
+label_societe = tk.Label(root, text="societe : ")
+label_societe.grid(row=2, column=0)
+entry_societe = tk.Entry(root)
+entry_societe.grid(row=2, column=1)
 
 label_email = tk.Label(root, text="Email : ")
 label_email.grid(row=3, column=0)
