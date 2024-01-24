@@ -50,7 +50,7 @@ app = FastAPI()
 async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTasks):
     print(demande)
     # Lancer la tâche en arrière-plan
-    #background_tasks.add_task(verificationDemande, demande.model_dump_json())
+    background_tasks.add_task(verificationDemande, demande.model_dump_json())
     background_tasks.add_task(create_demande, next(get_db()), demande)
     return {"message": "commande reçu et en cours de traitement"}
 

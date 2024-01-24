@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 parent_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(parent_dir, "..", "db_fournisseur.db")
+db_path = os.path.join(parent_dir, "db_fournisseur.db")
 
 # Se connecter à la base de données
 conn = sqlite3.connect(db_path)
