@@ -7,8 +7,8 @@ import httpx
 def envoi_devis():
     url_reception_devis = "http://127.0.0.1:8000/reception_devis/"
 
-    devis = {"montant": 1000}  # Remplacez par les données réelles de votre devis
-
+    devis = {"montant": 1000}
+    
     response = httpx.post(url_reception_devis, json=devis)
 
     if response.status_code == 200:

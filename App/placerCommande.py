@@ -7,25 +7,20 @@ import asyncio
 import requests
 import httpx
 import uvicorn
-
+from schema import DemandeBase
 
 ##8000
 app = FastAPI()
 
 
-class Demande(BaseModel):
-    nom: str
-    prenom: str
-    ville: str
-    email: str
-    description: str
+
 
 class Verification(BaseModel):
     response: bool
 
 
 @app.post("/effectue_commande/")
-async def effectue_commande(demande: Demande):
+async def effectue_commande(demande: DemandeBase):
     print(demande)
     demande_json = {
         "nom" : demande.nom,
@@ -70,7 +65,7 @@ async def verificationDevis(devis: devis, background_tasks: BackgroundTasks):
 
 
 def envoyer_notification(notification_text):
-    url_reception_paiement = "http://127.0.0.1:8001/reception_paiement/"
+    url_reception_paiement = "http://127.0.0.1:8003/reception_paiement/"
 
     data = {"notification": notification_text}
 
