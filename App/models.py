@@ -11,4 +11,5 @@ class Demande(Base):
     prenom = Column(String)
     description = Column(String)
     statut = Column(String)
+    devis = Column(String)
 

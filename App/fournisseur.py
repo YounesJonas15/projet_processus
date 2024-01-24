@@ -23,7 +23,8 @@ def create_demande(db: Session, demande: DemandeCreate):
         nom=demande.nom,
         prenom=demande.prenom,
         description=demande.description,
-        statut="recus"  
+        statut="recus",
+        devis = "notGenerated"  
     )
     db.add(db_demande)
     db.commit()
@@ -61,7 +62,7 @@ class Verification(BaseModel):
 async def verificationDemande(demande):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
-
+    
     channel.basic_publish(exchange='',
                       routing_key='commandList',
                       body=demande)
