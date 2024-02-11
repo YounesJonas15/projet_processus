@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Commandes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+            color: aliceblue;
+        }
+        h1 {
+            color: aliceblue;
+        }
+        #mes-commandes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .commande {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            background-color: rgb(56, 56, 56);
+            width: 50%;
+            padding: 10px;
+        }
+        .commande-description {
+            flex: 2;
+            margin-right: 10px;
+        }
+        .ajouter-commande-button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mes-commandes">
+        <h1>Mes Commandes</h1>
+
+        <!-- Exemple de commande -->
+        <div class="commande">
+            <div class="commande-description">
+                <p>Commande #1 : Description de la commande.</p>
+            </div>
+           
+        </div>
+
+        <!-- Exemple de commande -->
+        <div class="commande">
+            <div class="commande-description">
+                <p>Commande #2 : Une autre description de la commande.</p>
+            </div>
+           
+        </div>
+
+        <!-- ... Ajoutez autant de commandes que nécessaire ... -->
+
+    </div>
+
+    <button class="ajouter-commande-button" onclick="ajouterCommande()">Ajouter Commande</button>
+
+    <script>
+        function ajouterCommande() {
+            // Ajoutez le code nécessaire pour ajouter une nouvelle commande
+            // Rediriger vers la route /add_commande
+            window.location.href = '/add_commande';
+        }
+    </script>
+
+</body>
+</html>

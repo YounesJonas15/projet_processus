@@ -17,14 +17,16 @@ def callback(ch, method, properties, body):
     ##Verification par humain
     ##Stockage base de données 
 
-    url = "http://localhost:3000/update-description"
-    data_web = {
+    url = "http://localhost:3000/update-description2"
+    '''data_web = {
         "description": result["description"]
     }
-    response_from_web = requests.post(url, json=data_web)
+    response_from_web = requests.post(url, json=data_web)'''
+
+    response_from_web = requests.post(url)
     print("Status Code", response_from_web.status_code)
     print("JSON Response ", response_from_web.json())
-    response = response_from_web.json()["message"]
+    ''' response = response_from_web.json()["message"]
     result["response"] = response
     result["devis"] = response_from_web.json()["prix"]
     print(result)
@@ -33,7 +35,7 @@ def callback(ch, method, properties, body):
     print("demande vérifié! ")
     channel.basic_publish(exchange='',
                     routing_key='VerificationResult',
-                    body=json.dumps(result))
+                    body=json.dumps(result))'''
 
 
 

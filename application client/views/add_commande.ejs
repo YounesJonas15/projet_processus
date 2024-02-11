@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Commande</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+            color: aliceblue;
+        }
+        h1 {
+            color: aliceblue;
+        }
+        #ajouter-commande {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form {
+            width: 50%;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .ajouter-commande-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: rgb(56, 56, 56);; /* Couleur de fond en gris */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ajouter-commande">
+        <h1>Ajouter une Commande</h1>
+
+        <form id="commandeForm">
+            
+            <label for="email">Adresse mail :</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
+
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" required>
+
+            <label for="societe">Société ("particulier" si vous etes un particulier) :</label>
+            <input type="text" id="societe" name="societe" required>
+
+            <label for="description">Description :</label>
+            <input type="text" id="description" name="description" required>
+            
+                   
+        </form>
+        <button class="ajouter-commande-button" onclick="ajouterCommande()">Ajouter Commande</button>
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function ajouterCommande() {
+
+            var formulaire = document.getElementById('commandeForm');
+            var formData = new FormData(formulaire);
+            console.log(formData.get('email'))
+            var formDataObject = {};
+            formData.forEach((value, key) => {
+               formDataObject[key] = value;
+            });
+            console.log(formDataObject)
+            var jsonData = JSON.stringify(formDataObject);
+            
+            
+               $.ajax({
+                type: 'POST',
+                url: '/send_commande',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function (response) {
+                    alert("Commande reçue !");
+                    console.log("Réussi");
+                },
+                error: function (error) {
+                    console.error("Erreur lors de l'envoi de la commande:", error);
+                    alert("Erreur lors de l'envoi de la commande.");
+                }
+            });
+            console.log(formData.get('email'))
+        }
+            
+        
+    </script>
+
+</body>
+</html>

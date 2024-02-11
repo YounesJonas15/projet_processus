@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Description de Commande</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+        }
+        h1 {
+            color: aliceblue;
+        }
+        p {
+            color: aliceblue;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        #commande-description {
+            margin: 20px;
+        }
+
+        #buttons-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+            align-items: center;
+            
+        }
+
+        .button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            height: 50px;
+            width: 100px;
+        }
+
+        .valide-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        .pas-valide-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+        .commande {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            background-color: rgb(56, 56, 56);
+            margin-left: 25%;
+            margin-right: 25%;
+            
+        }
+        #commandeContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        #devis {
+            margin: 15px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+    <h1>Commandes à valider</h1>
+    <div id="commandes"> 
+    <% commandes.forEach(command => { %>   
+    <div id=<%= command.id %> class="commande">
+    <div id="commandeContainer">
+    <div id="commande-description">
+        
+    <p><%= command.description %></p>
+        
+    </div>
+    
+   
+
+    <div id="buttons-container">
+        <button id="<%= command.id %>" class="button valide-button" onclick="validerCommande(this)">Valide</button>
+        <button id="<%= command.id %>" class="button pas-valide-button" onclick="pasValiderCommande(this)">Pas valide</button>
+    
+    </div>
+
+    </div>
+    <div id="devisContainer">
+    <div id="devis" class=<%= command.devis %>>
+        <label for="prix">Prix :</label>
+        <input type="number" id="prixInput<%= command.id %>">
+    </div>
+    </div>
+    </div>
+
+    <% }) %>
+    </div>
+    </div>
+
+    
+
+   
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function validerCommande(element) {
+            console.log("bouton appuyé")
+            console.log('prixInput' + element.id)
+            var prix = document.getElementById('prixInput' + element.id).value;
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à true
+        $.ajax({
+            type: 'POST',
+            url: '/update-decision2',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: element.id, decision: true, devis: prix }),
+            success: function (response) {
+                alert("Commande validée !");
+                console.log("réussi");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.error("Erreur lors de la validation de la commande:", error);
+                alert("Erreur lors de la validation de la commande.");
+            }
+        });
+        }
+
+        function pasValiderCommande(element) {
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à false
+        $.ajax({
+            type: 'POST',
+            url: '/update-decision2',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: element.id, decision: false, devis: 0 }),
+            success: function (response) {
+                alert("Commande non validée !");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.error("Erreur lors de l'annulation de la commande:", error);
+                alert("Erreur lors de l'annulation de la commande.");
+            }
+        });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Description de Commande</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+        }
+        h1 {
+            color: aliceblue;
+        }
+        p {
+            color: aliceblue;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        #commande-description {
+            margin-bottom: 20px;
+        }
+
+        #buttons-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #valide-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        #pas-valide-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+        #commande {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            background-color: rgb(56, 56, 56);
+            margin-left: 25%;
+            margin-right: 25%;
+            
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        #devis {
+            margin-bottom: 15px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+    <h1>Commandes à valider</h1>
+    
+    <div id="commande">
+    
+    <div id="commande-description">
+        
+    <p><%= commandes.description %></p>
+        
+    </div>
+
+    <div id="devis" class=<%= commandes.devis %>>
+        <label for="prix">Prix :</label>
+        <input type="number" id="prixInput">
+    </div>
+
+    <div id="buttons-container">
+        <button id="valide-button" class="button" onclick="validerCommande()">Valide</button>
+        <button id="pas-valide-button" class="button" onclick="pasValiderCommande()">Pas valide</button>
+    </div>
+    
+    </div>
+
+    </div>
+
+    
+
+   
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function validerCommande() {
+            console.log("bouton appuyé")
+            var prix = document.getElementById('prixInput').value;
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à true
+        $.ajax({
+            type: 'POST',
+            url: '/update-decision',
+            contentType: 'application/json',
+            data: JSON.stringify({ decision: true, devis: prix }),
+            success: function (response) {
+                alert("Commande validée !");
+                console.log("réussi");
+            },
+            error: function (error) {
+                console.error("Erreur lors de la validation de la commande:", error);
+                alert("Erreur lors de la validation de la commande.");
+            }
+        });
+        }
+
+        function pasValiderCommande() {
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à false
+        $.ajax({
+            type: 'POST',
+            url: '/update-decision',
+            contentType: 'application/json',
+            data: JSON.stringify({ decision: false, prix: 0}),
+            success: function (response) {
+                alert("Commande non validée !");
+            },
+            error: function (error) {
+                console.error("Erreur lors de l'annulation de la commande:", error);
+                alert("Erreur lors de l'annulation de la commande.");
+            }
+        });
+        }
+    </script>
+
+</body>
+</html>

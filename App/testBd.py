@@ -31,6 +31,12 @@ if rows:
 else:
     print("Aucun tuple n'existe dans la table demandes.")
 
+# Requête pour vider la table "demandes"
+'''sql_query = "DELETE FROM demandes;"
+
+# Exécuter la requête
+cursor.execute(sql_query)
+conn.commit()'''
 
 # Fermer la connexion
 conn.close()
