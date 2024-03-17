@@ -20,6 +20,6 @@ L'ajout d'une nouvelle commande se fait dans l'application client, ou celui-ci p
 Pour le fournisseur, dans l'application validation commande, il peut valider les commandes de ses client tout en générant directement leur devis.
 
 ## Contact
-Pour toutes questions supplémentaire, hésitez pâs à nous contacter: 
+Pour toutes questions supplémentaire, n'hésitez pas à nous contacter: 
 M.Yassine : mazizyassine25@gmail.com
 A.Younes: younesamrane01@gmail.com
