@@ -15,9 +15,12 @@ A fin de tester le produit, il est nécessaire de lancer tout ce qui suit en uti
 5. Dossier App, lancez la commande ```python worker_verification.py``` pour lancer le premier worker.
 6. Dossier App, lancez la commande ```python worker_fin_verif.py``` pour lancer le deuxième worker.
 
+## Lancement Dashboard analyse
+Pour lancer le dashboad, il faut lancer le fichier dashboad_analyse.py en utilisant la commande ```streamlit run dashboad_analyse.py```
 ## Utilisation
 L'ajout d'une nouvelle commande se fait dans l'application client, ou celui-ci peut aussi valider son devis après que le fournisseur l'ai généré.
 Pour le fournisseur, dans l'application validation commande, il peut valider les commandes de ses client tout en générant directement leur devis.
+
 
 ## Contact
 Pour toutes questions supplémentaire, n'hésitez pas à nous contacter: 
