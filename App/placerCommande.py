@@ -12,6 +12,8 @@ from schema import DemandeBase,devis,Verification
 ##PORT: 8000
 app = FastAPI()
 
+## End point, appellé par l'application web, pour effectuer la commande 
+## fais appelle au serveur fournisseur à travers une API pour envoyer la commande
 @app.post("/effectue_commande/")
 async def effectue_commande(demande: DemandeBase):
     print(demande)
@@ -26,6 +28,7 @@ async def effectue_commande(demande: DemandeBase):
     print(demande)
     return {"message": "commande reçu et en cours de traitement"}
 
+## End point 
 @app.post("/validate_devis/")
 async def validate_devis(verification: Verification):
     json_verification = {'id' : verification.id, 'response': verification.response, 'devis': verification.devis}
@@ -38,7 +41,8 @@ async def validate_devis(verification: Verification):
 
     return {"message": "commande reçu et en cours de traitement"}
 
-
+## End point pour recevoir la réponse du fournisseur sur la validation de la commande
+## Appelle ensuite l'appli web du client à travers une api, pour afficher le devis et le faire payé par le user
 @app.post("/verification_commande/")
 async def verification_commande(verification: Verification):
     if (verification.response):

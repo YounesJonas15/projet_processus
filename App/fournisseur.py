@@ -13,7 +13,7 @@ from db_fournisseur import engine, SessionLocal
 from schema import  DemandeBase, DemandeCreate , Verification
 from models import Demande, Base
 
-#Concernant la Base de donnée 
+#Création de la demande dans la base de données
 def create_demande(db: Session, demande: DemandeCreate):
     
     random_id = random.randint(1, 1000)
@@ -32,7 +32,7 @@ def create_demande(db: Session, demande: DemandeCreate):
     return db_demande
 
 
-
+## Pour obtenir une session de la BD
 def get_db():
     db = SessionLocal()
     try:
@@ -46,18 +46,16 @@ Base.metadata.create_all(bind=engine)
 ##8001
 app = FastAPI()
 
-   
-@app.post("/reception_commande/")
-async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTasks):
-    print(demande)
-    # Lancer la tâche en arrière-plan
-    background_tasks.add_task(verificationDemande, demande.model_dump_json())
-    background_tasks.add_task(create_demande, next(get_db()), demande)
-    return {"message": "commande reçu et en cours de traitement"}
+## Mise à jour du devis vérifié et payé par le client dans la base de données
+async def verificationDevis(db: Session, verification):
+    if(verification.response == True):
+        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "payé"})
+    else:
+        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "non payé"})
 
+    db.commit()
 
-
-
+## Enregistrement de la demande dans une messaging queu RABBITMQ
 async def verificationDemande(demande):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
@@ -71,6 +69,7 @@ async def verificationDemande(demande):
     # Fermer la connexion
     connection.close()
 
+## Enregistrement de la vérification d'une commande (Validé ou pas validé) dans une messaging queu
 async def verificationCommande(verification):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
@@ -84,37 +83,34 @@ async def verificationCommande(verification):
     # Fermer la connexion
     connection.close()
 
-async def verificationDevis(db: Session, verification):
-    if(verification.response == True):
-        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "payé"})
-    else:
-        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "non payé"})
-
-    db.commit()
-    
-        
-        
 
 
-     
+## End point pour recevoir la commande du client et lancer deux backround_tasks
+## verificationDemande: Pour verifier la commande par un humain (dans une messaging queu)
+## create_demande: ajout de la commande dans la BD
+@app.post("/reception_commande/")
+async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTasks):
+    print(demande)
+    # Lancer la tâche en arrière-plan
+    background_tasks.add_task(verificationDemande, demande.model_dump_json())
+    background_tasks.add_task(create_demande, next(get_db()), demande)
+    return {"message": "commande reçu et en cours de traitement"}
+ 
 
-
+## End point pour mettre la commande vérifié par l'humain dans une messaging queu pour la suite du processus
+## A travers une background task
 @app.post("/verification_commande_fournisseur/")
 async def verification_commande_fournisseur(verification: Verification, background_tasks: BackgroundTasks):
     background_tasks.add_task(verificationCommande, verification.model_dump_json())
-    #response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
-    #print(response.json())
     return("réponse reçu avec succès")
 
 
-
+## End point pour mettre à jour la vérification du devis à partir du client (Payé ou non payé par le client)
 @app.post("/verification_devis/")
 async def verification_devis(verification: Verification, background_tasks: BackgroundTasks):
     
     
     background_tasks.add_task(verificationDevis, next(get_db()), verification)
-    #response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
-    #print(response.json())
     return("OK")
 
 

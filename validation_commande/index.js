@@ -173,43 +173,7 @@ app.post('/update-decision2', async (req, res) => {
 
 })
 
-app.post('/update-description', async (req, res) => {
-    try {
-        if (!req.body) {
-            return res.status(400).json({ error: 'Le corps de la requête est invalide.' });
-        }
-        // Récupérer la description depuis le corps de la requête POST
-        const newDescription = req.body.description;
-        
-        decision = null
-        commandes.description = newDescription
-        commandes.devis = ""
-        while (decision === null) {
-            // Attente courte pour éviter de bloquer le serveur
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
 
-        if (decision === true) {
-            // Répondre avec un message de succès
-        res.send({ message: true, prix: prix });
-        commandes = {description: "Aucune commande.", devis: "hidden"}
-        }
-        else {
-            res.send({message: false, prix: 0})
-        }
-    } catch (error) {
-        console.error('Erreur lors de la mise à jour de la description:', error);
-        res.status(500).send({ error: 'Erreur lors de la mise à jour de la description.' });
-    }
-});
-
-app.post('/update-decision', async (req, res) => {
-    decision = req.body.decision
-    prix = req.body.devis
-    commandes = {description: "Aucune commande.", devis: "hidden"}
-    res.send("réussi")
-
-});
 
 const port = 3000;
 app.listen(port, () => {
