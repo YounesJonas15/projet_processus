@@ -1,7 +1,7 @@
 ## Installation des dependancies
 
 Un fichier requirement.txt est à votre disposition, tout ce que vous avez à faire est de lancer la commande: 
-```pip install requirement.txt```
+```pip install -r requirements.txt```
 
 Pour les 2 application web, il est nécessaires de lancer la commande ```npm install``` dans les 2 dossiers application client et validation_commande.
 
