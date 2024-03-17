@@ -14,8 +14,12 @@ def callback(ch, method, properties, body):
     json_string = body.decode('utf-8')
     result = json.loads(json_string)
     print(result)
-    response = requests.post("http://127.0.0.1:8001/verification_commande_fournisseur/", json={"response" : result['response']})
+
+    response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"id": result["id"], "response" : result["response"], "devis" : result["devis"]})
     print(response.json())
+
+    #response = requests.post("http://127.0.0.1:8001/verification_commande_fournisseur/", json={"response" : result['response']})
+    #print(response.json())
         
 
 # Indiquer à RabbitMQ d'appeler la fonction de rappel lorsque des messages sont reçus

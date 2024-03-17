@@ -9,7 +9,7 @@ import httpx
 import uvicorn
 from schema import DemandeBase,devis,Verification
 
-##8000
+##PORT: 8000
 app = FastAPI()
 
 @app.post("/effectue_commande/")
@@ -26,12 +26,32 @@ async def effectue_commande(demande: DemandeBase):
     print(demande)
     return {"message": "commande reçu et en cours de traitement"}
 
+@app.post("/validate_devis/")
+async def validate_devis(verification: Verification):
+    json_verification = {'id' : verification.id, 'response': verification.response, 'devis': verification.devis}
+    print(json_verification)
+    response = requests.post("http://127.0.0.1:8001/verification_devis/", json=json_verification)
+    print(response)
+    
+
+
+
+    return {"message": "commande reçu et en cours de traitement"}
+
+
 @app.post("/verification_commande/")
 async def verification_commande(verification: Verification):
     if (verification.response):
         print("votre commande est valide.")
+        print(verification.devis)
+
     else:
         print("votre commande est pas valide.")
+
+    url = "http://localhost:3001/commande_to_validate"
+    response_from_web = requests.post(url, json={"id": verification.id, "response" : verification.response, "devis" : verification.devis})
+    print("Status Code", response_from_web.status_code)
+    
     return("réponse reçu avec succès")
 
 
@@ -44,7 +64,7 @@ async def reception_devis(devis: devis, background_tasks: BackgroundTasks):
 
     background_tasks.add_task(verificationDevis, devis.model_dump_json(), background_tasks)
     return {"message": "Devis  reçu et en cours de traitement"}
-    
+  
 
 async def verificationDevis(devis: devis, background_tasks: BackgroundTasks):
     reponse = True

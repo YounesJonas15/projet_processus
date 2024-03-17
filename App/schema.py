@@ -11,7 +11,9 @@ class DemandeCreate(DemandeBase):
     pass
 
 class Verification(BaseModel):
+    id: str
     response: bool
+    devis : str
 
 class devis (BaseModel):
       montant: int

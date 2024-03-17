@@ -84,9 +84,9 @@
 </head>
 <body>
     <div id="container">
-    <h1>Commandes à valider</h1>
+    <h1>Commandes à préparer</h1>
     <div id="commandes"> 
-    <% commandes.forEach(command => { %>   
+    <% commandes_preparation.forEach(command => { %>   
     <div id=<%= command.id %> class="commande">
     <div id="commandeContainer">
     <div id="commande-description">
@@ -98,8 +98,8 @@
    
 
     <div id="buttons-container">
-        <button id="<%= command.id %>" class="button valide-button" onclick="validerCommande(this)">Valide</button>
-        <button id="<%= command.id %>" class="button pas-valide-button" onclick="pasValiderCommande(this)">Pas valide</button>
+        <button id="<%= command.id %>" class="button valide-button" onclick="validerCommande(this)">Finished</button>
+        
     
     </div>
 
@@ -143,23 +143,7 @@
         });
         }
 
-        function pasValiderCommande(element) {
-            // Effectuer une requête AJAX pour mettre à jour la variable decision à false
-        $.ajax({
-            type: 'POST',
-            url: '/update-decision2',
-            contentType: 'application/json',
-            data: JSON.stringify({ id: element.id, decision: false, devis: "0" }),
-            success: function (response) {
-                alert("Commande non validée !");
-                window.location.reload();
-            },
-            error: function (error) {
-                console.error("Erreur lors de l'annulation de la commande:", error);
-                alert("Erreur lors de l'annulation de la commande.");
-            }
-        });
-        }
+       
     </script>
 
 </body>

@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 //utilisation de sqllite
 const sqlite3 = require('sqlite3').verbose();
-const dbPath = '../projet_processus/App/db_fournisseur.db';
+const dbPath = '../App/db_fournisseur.db';
 
 
 
@@ -20,16 +20,14 @@ const dbPath = '../projet_processus/App/db_fournisseur.db';
 // Récupérer tous les tuples de la table "demandes"buttons-container
 
 let commandes = [];
-function fetchData(commandes) {
-    
+let commandes_preparation = []
+function fetchData(commandes) {  
 
     // Ouvrir une connexion à la base de données
     const db = new Database(dbPath);
-
-
     try {
         const rows = db.prepare('SELECT * FROM demandes').all();
-        console.log(rows); // Afficher les lignes récupérées
+       
         rows.forEach(demande => {
             if(demande.statut == 'recus') {
             d = {
@@ -44,11 +42,39 @@ function fetchData(commandes) {
         })
     } catch (err) {
         console.error(err.message);
-    }
-
+    } 
     
-    
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Déconnexion de la base de données SQLite');
+    });
+}
 
+function fetchDataPreparation(commandes) {  
+
+    // Ouvrir une connexion à la base de données
+    const db = new Database(dbPath);
+    try {
+        const rows = db.prepare('SELECT * FROM demandes').all();
+       
+        rows.forEach(demande => {
+            if(demande.statut == 'payé') {
+            d = {
+                id: demande.id,
+                description : demande.description,
+                devis : ""
+            }
+            
+            
+            commandes.push(d)
+        }
+        })
+    } catch (err) {
+        console.error(err.message);
+    } 
+    
     db.close((err) => {
         if (err) {
             console.error(err.message);
@@ -112,6 +138,12 @@ app.get('/home2', async (req, res) => {
     res.render('home2', { commandes });
 });
 
+app.get('/commande_preparation', async (req, res) => {
+    commandes_preparation = []
+    fetchDataPreparation(commandes_preparation)
+    res.render('commande_preparation', { commandes_preparation });
+});
+
 
 app.post('/update-description2', async (req, res) => {
     commandes = []
@@ -126,7 +158,17 @@ app.post('/update-decision2', async (req, res) => {
     commandes = commandes.filter(commande => commande.id !== req.body.id)
     console.log(req.body)
     validateCommande(parseInt(req.body.id), req.body.decision, req.body.devis)
-    console.log("commande validé")
+    const url = "http://127.0.0.1:8001/verification_commande_fournisseur/";
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"id" : req.body.id, "response" : req.body.decision,"devis" : req.body.devis}),
+    });
+    
+
     res.send("réussi")
 
 })

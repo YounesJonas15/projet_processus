@@ -10,7 +10,7 @@ import json
 import uvicorn
 from sqlalchemy.orm import Session
 from db_fournisseur import engine, SessionLocal
-from schema import  DemandeBase, DemandeCreate
+from schema import  DemandeBase, DemandeCreate , Verification
 from models import Demande, Base
 
 #Concernant la Base de donnée 
@@ -56,8 +56,7 @@ async def recevoir_commande(demande: DemandeBase, background_tasks: BackgroundTa
     return {"message": "commande reçu et en cours de traitement"}
 
 
-class Verification(BaseModel):
-    response: bool
+
 
 async def verificationDemande(demande):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -72,13 +71,51 @@ async def verificationDemande(demande):
     # Fermer la connexion
     connection.close()
 
+async def verificationCommande(verification):
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    
+    channel.basic_publish(exchange='',
+                      routing_key='VerificationResult',
+                      body=verification)
+
+    print(" [x] Message envoyé à la file d'attente 'VerificationResult'")
+
+    # Fermer la connexion
+    connection.close()
+
+async def verificationDevis(db: Session, verification):
+    if(verification.response == True):
+        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "payé"})
+    else:
+        db.query(Demande).filter_by(id=verification.id).update({Demande.statut: "non payé"})
+
+    db.commit()
+    
+        
+        
+
+
+     
+
 
 @app.post("/verification_commande_fournisseur/")
-async def verification_commande_fournisseur(verification: Verification):
-    
-    response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
-    print(response.json())
+async def verification_commande_fournisseur(verification: Verification, background_tasks: BackgroundTasks):
+    background_tasks.add_task(verificationCommande, verification.model_dump_json())
+    #response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
+    #print(response.json())
     return("réponse reçu avec succès")
+
+
+
+@app.post("/verification_devis/")
+async def verification_devis(verification: Verification, background_tasks: BackgroundTasks):
+    
+    
+    background_tasks.add_task(verificationDevis, next(get_db()), verification)
+    #response = requests.post("http://127.0.0.1:8000/verification_commande/", json={"response" : verification.response})
+    #print(response.json())
+    return("OK")
 
 
 

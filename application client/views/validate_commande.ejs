@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valider mes commandes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+            color: aliceblue;
+        }
+        h1 {
+            color: aliceblue;
+        }
+        #valider-commandes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .commande {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 50%;
+            background-color: #333;
+        }
+        .commande label {
+            font-weight: bold;
+        }
+        .btn-valider {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-refuser {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-ajouter {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="valider-commandes">
+        <h1>Valider mes commandes</h1>
+
+        <div class="commande">
+            <label for="id">ID de la commande :</label>
+            <span id="id"><%= commande.id %></span><br>
+
+            <label for="etat">État de la commande :</label>
+            <span id="etat"><%= commande.etat %></span><br>
+
+            <label for="prix">Prix généré :</label>
+            <span id="prix"><%= commande.devis %></span><br>
+
+            <button class="btn-valider" onclick="validerCommande()">Valider et payer</button>
+            <button class="btn-refuser" onclick="refuserCommande()">Refuser</button>
+        </div>
+        <button class="btn-ajouter" onclick="window.location.href='home'">Ajouter une commande</button>
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        function validerCommande(element) {
+            console.log("bouton appuyé")
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à true
+        $.ajax({
+            type: 'POST',
+            url: '/validate_devis',
+            contentType: 'application/json',
+            data: JSON.stringify({decision: true}),
+            success: function (response) {
+                alert("Commande validée !");
+                console.log("réussi");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.error("Erreur lors de la validation de la commande:", error);
+                alert("Erreur lors de la validation de la commande.");
+            }
+        });
+        window.location.reload();
+        }
+
+        function refuserCommande(element) {
+            console.log("bouton appuyé")
+            // Effectuer une requête AJAX pour mettre à jour la variable decision à true
+        $.ajax({
+            type: 'POST',
+            url: '/validate_devis',
+            contentType: 'application/json',
+            data: JSON.stringify({decision: false}),
+            success: function (response) {
+                alert("Commande validée !");
+                console.log("réussi");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.error("Erreur lors de la validation de la commande:", error);
+                alert("Erreur lors de la validation de la commande.");
+            }
+        });
+        window.location.reload();
+        }
+
+      
+    </script>
+</body>
+</html>
